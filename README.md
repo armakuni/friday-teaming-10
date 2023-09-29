@@ -18,14 +18,44 @@ Your task is to show them that your TDD-fu and your new-age programming language
 
 ### Requirements
 
-Write a class Account that offers the following methods void deposit(int) void withdraw(int) String printStatement()
+Write a class Account that offers the following methods:
+
+- `void deposit(int)`
+- `void withdraw(int)`
+- `String printStatement()`
 
 An example statement would be:
 
 ```
 Date        Amount  Balance
-24.12.2015   +500      500
-23.8.2016    -100      400
+24/12/2015   +500      500
+23/08/2016   -100      400
+```
+
+## The Banking Kata V2
+
+### Requirements
+
+Write a class Account that offers the following methods:
+
+- `String createAccount(firstName: String, lastName: String, address1: String, address2: String, town: String,
+   county: String, postCode: String)`
+- `void deposit(accountId: String, amountPence: int)`
+- `void withdraw(accountId: String, amountPence: int)`
+- `String printStatement(accountId: String)`
+
+An example statement would be:
+
+```
+Georgia Hutchinson
+4 Shannon Way
+Chippenham
+Wiltshire
+CB7 6UQ
+
+Date        Amount  Balance
+24/12/2015   +500      500
+23/08/2016   -100      400
 ```
 
 ## Rules of Object Calisthenics
