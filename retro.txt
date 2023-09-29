@@ -1,0 +1,19 @@
+# What did we like?
++ Kotlin (+1)  (ja)
++ object calisthenics  (ja)
++ learning kotlin (ag)
++ remembering object calisthenics again (ag)
++ Tom's radiophonic voice for presenting  (ja)
+
+# What did we not like?
+x Code with me bugs (ja)
+X feels way too 'enterprisey' (bn) (+1 ag)
+X intellij codewithme (bn) (+100 ag)
+X felt like we talked over each other and didn't honour the mobbing roles at times (ag) (+2)
+X too data class oriented? (ag)
+
+# What do you think of the rules of object calisthenics
+X i like but we shouldn't be fundamentalist about OO where it makes sense  (ja)
+X very good practice avoiding getters and setters  (ja)
+X some make sense but some are just way too obnoxious (e.g. no getters) (bn)
+X object calisthenics feels like an interesting exercise but (ironically) led to bloated code (ag)

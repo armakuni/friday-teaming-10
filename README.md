@@ -7,10 +7,13 @@ For the 10th episode of Friday will try applying Object Calisthenics to The Bank
 [Source](https://kata-log.rocks/banking-kata)
 
 ### Credits
+
 Inspired by Sandro Mancuso
 
 ### Your Task
-Your bank is tired of its mainframe COBOL accounting software and they hired both of you for a greenfield project in - what a happy coincidence
+
+Your bank is tired of its mainframe COBOL accounting software and they hired both of you for a greenfield project in -
+what a happy coincidence
 
 * your favorite programming language!
 
@@ -22,7 +25,7 @@ Write a class Account that offers the following methods:
 
 - `void deposit(int)`
 - `void withdraw(int)`
-- `String printStatement()`
+- `String printStatement()` 
 
 An example statement would be:
 
@@ -36,13 +39,14 @@ Date        Amount  Balance
 
 ### Requirements
 
-Write a class Account that offers the following methods:
+Write a class Bank that offers the following methods:
 
 - `String createAccount(firstName: String, lastName: String, address1: String, address2: String, town: String,
    county: String, postCode: String)`
 - `void deposit(accountId: String, amountPence: int)`
 - `void withdraw(accountId: String, amountPence: int)`
 - `String printStatement(accountId: String)`
+- `void transfer(fromAccountId: String, toAccountId: String, amountPence: int)`
 
 An example statement would be:
 
