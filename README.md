@@ -72,31 +72,35 @@ methods for the inner blocks.
 
 #### Bad
 
-```python
-def assert_all_success(jobs):
-    for job in jobs:
-        if not job.success:
-            raise AssertionError("Job %s failed" % job.id)
+```kotlin
+fun assertAllSuccess(jobs: List<Job>) {
+    for (job in jobs) {
+        if (!job.success) {
+            throw AssertionError("Job ${job.id} failed")
+        }
+    }
+}
 ```
 
 #### Good
 
-```python
-def assert_all_success(jobs):
-    for job in jobs:
-        assert_success(job)
+```kotlin
+fun assertAllSuccess(jobs: List<Job>) {
+    for (job in jobs) {
+        assertSuccess(job)
+    }
+}
 
-
-def assert_success(job):
-    if not job.success:
-        raise AssertionError("Job %s failed" % job.id)
+fun assertSuccess(job: Job) {
+    if (!job.success) {
+        throw AssertionError("Job ${job.id} failed")
+    }
+}
 ```
 
 ### 2. Don't Use the ELSE Keyword
 
 Find ways to remove the `else` keyword from your code.
-
-Note: `elif` is also `else`.
 
 #### Refactorings
 
@@ -104,43 +108,56 @@ Note: `elif` is also `else`.
 
 #### Bad
 
-```python
-def is_success(self):
-    if self.status != "success":
-        result = False
-    else:
-        result = True
+```kotlin
+fun isSuccess(status: String): Boolean {
+    var result: Boolean
+    
+    if (status != "success") {
+        result = false
+    } else {
+        result = true
+    }
 
     return result
+}
+
 ```
 
 #### Good
 
-```python
-def is_success(self):
-    result = True
+```kotlin
+fun isSuccess(status: String): Boolean {
+    var result = true
 
-    if self.status != "success":
-        result = False
+    if (status != "success") {
+        result = false
+    }
 
     return result
+}
+
 ```
 
 or
 
-```python
-def is_success(self):
-    if self.status != "success":
-        return False
+```kotlin
+fun isSuccess(status: String): Boolean {
+    if (status != "success") {
+        return false
+    }
 
-    return True
+    return true
+}
+
 ```
 
 or better yet (in this particular circumstance)
 
-```python
-def is_success(self):
-    return self.status == "success"
+```kotlin
+fun isSuccess(status: String): Boolean {
+    return status == "success"
+}
+
 ```
 
 ### 3. Wrap All Primitives and Strings
@@ -151,36 +168,32 @@ that it cannot be constructed with invalid values.
 
 #### Bad
 
-```python
-class User:
-    def __init__(self, name: str, age: str):
-        if age < 0:
-            raise ValueError("Age must be positive")
+```kotlin
+class User(val name: String, val age: Int) {
+    init {
+        if (age < 0) {
+            throw IllegalArgumentException("Age must be positive")
+        }
+    }
+}
 
-        self.name = name
-        self.age = age
 ```
 
 #### Good
 
-```python
-class PersonName:
-    def __init__(self, name: str):
-        self.name = name
+```kotlin
+class PersonName(val name: String)
 
+class Age(val age: Int) {
+    init {
+        if (age < 0) {
+            throw IllegalArgumentException("Age must be positive")
+        }
+    }
+}
 
-class Age:
-    def __init__(self, age: int):
-        if age < 0:
-            raise ValueError("Age must be positive")
+class User(val name: PersonName, val age: Age)
 
-        self.age = age
-
-
-class User:
-    def __init__(self, name: PersonName, age: Age):
-        self.name = name
-        self.age = age
 ```
 
 ### 4. First Class Collections
@@ -190,30 +203,34 @@ methods for each specific operation you want to perform on it.
 
 #### Bad
 
-```python
-def send_special_offer_email(users, offer: str):
-    subject = "Special Offer"
-    message = "Special offer: %s" % offer
-    for user in users:
-        send_email(user, subject, message)
+```kotlin
+fun sendSpecialOfferEmail(users: List<User>, offer: String) {
+    val subject = "Special Offer"
+    val message = "Special offer: $offer"
+    for (user in users) {
+        sendEmail(user, subject, message)
+    }
+}
+
 ```
 
 #### Good
 
-```python
-class Users:
-    def __init__(self, users: List[User]):
-        self.users = users
+```kotlin
+class Users(val users: List<User>) {
+    fun sendEmail(subject: String, message: String) {
+        for (user in users) {
+            sendEmail(user, subject, message)
+        }
+    }
+}
 
-    def send_email(self, subject, message):
-        for user in self.users:
-            send_email(user, subject, message)
+fun sendSpecialOfferEmail(users: Users, offer: String) {
+    val subject = "Special Offer"
+    val message = "Special offer: $offer"
+    users.sendEmail(subject, message)
+}
 
-
-def send_special_offer_email(users: Users, offer: str):
-    subject = "Special Offer"
-    message = "Special offer: %s" % offer
-    users.send_email(subject, message)
 ```
 
 ### 5. One Dot per Line
@@ -226,25 +243,32 @@ because you have to use `self`. (e.g. `self.collaborator.method()`).
 
 #### Bad
 
-```python
-class Order:
-    def send_received_email(self):
-        self.customer.email.send("Order %s" % self.order_id, "Your order has been received")
+```kotlin
+class Order(val customer: Customer) {
+    fun sendReceivedEmail(orderId: String) {
+        customer.email.send("Order $orderId", "Your order has been received")
+    }
+}
+
 ```
 
 #### Good
 
-```python
-class Customer:
-    # ...
+```kotlin
+class Customer(val email: EmailAddress) {
+    // ...
 
-    def send_email(self, subject, message):
-        self.email.send(subject, message)
+    fun sendEmail(subject: String, message: String) {
+        email.send(subject, message)
+    }
+}
 
+class Order(val customer: Customer) {
+    fun sendReceivedEmail(orderId: String) {
+        customer.sendEmail("Order $orderId", "Your order has been received")
+    }
+}
 
-class Order:
-    def send_received_email(self):
-        self.customer.send_email("Order %s" % self.order_id, "Your order has been received")
 ```
 
 ### 6. Don't Abbreviate
@@ -262,27 +286,18 @@ This can be a tough exercise in naming things!
 
 #### Bad
 
-```python
-class User:
-    def __init__(self, name: PersonName, email: Email, phone: PhoneNumber):
-        self.name = name
-        self.email = email
-        self.phone = phone
+```kotlin
+class User(val name: PersonName, val email: Email, val phone: PhoneNumber)
+
 ```
 
 #### Good
 
-```python
-class ContactDetails:
-    def __init__(self, email: Email, phone: PhoneNumber):
-        self.email = email
-        self.phone = phone
+```kotlin
+class ContactDetails(val email: Email, val phone: PhoneNumber)
 
+class User(val name: PersonName, val contactDetails: ContactDetails)
 
-class User:
-    def __init__(self, name: PersonName, contact_details: ContactDetails):
-        self.name = name
-        self.contact_details = contact_details
 ```
 
 ### 9. No Getters/Setters/Properties
@@ -296,48 +311,40 @@ makes the code more flexible.
 
 #### Bad
 
-```python
-def send_email(customer):
-    email = Email()
-    email.to_address = customer.email_address
+```kotlin
+fun sendEmail(customer: Customer) {
+    val email = Email()
+    email.toAddress = customer.emailAddress
     email.subject = "Your new order"
-    email.body = (
-        f"Dear {customer.name}\n"
-        f"Your order has been received!"
-    )
-    send_email(email)
+    email.body = "Dear ${customer.name}\nYour order has been received!"
+    sendEmail(email)
+}
+
 ```
 
 #### Good
 
-```python
-class Customer:
-    def __init__(self, name: str, email_address: str):
-        self.name = name
-        self.email_address = email_address
+```kotlin
+class Customer(val name: String, val emailAddress: String) {
+    fun sendMessageTo(messenger: Messenger) {
+        messenger.sendMessage(name, emailAddress)
+    }
+}
 
-    def send_message_to(self, messenger: Messenger):
-        messenger.send_message(self.name, self.email_address)
-
-
-class OrderReceivedEmailer:
-    def __init__(self, subject: str, body: str):
-        self.subject = subject
-        self.body = body
-
-    def send_message(self, name: str, email_address: str):
-        email = Email(
-            to_address=customer.email_address,
-            subject="Your new order",
-            body=(
-                f"Dear {customer.name}\n"
-                f"Your order has been received!"
-            )
+class OrderReceivedEmailer(val subject: String, val body: String) {
+    fun sendMessage(name: String, emailAddress: String) {
+        val email = Email(
+            toAddress = emailAddress,
+            subject = "Your new order",
+            body = "Dear $name\nYour order has been received!"
         )
-        send_email(email)
+        sendEmail(email)
+    }
+}
 
+fun sendEmail(customer: Customer) {
+    val messenger = OrderReceivedEmailer("Your new order", "")
+    customer.sendMessageTo(messenger)
+}
 
-def send_email(customer):
-    messenger = OrderReceivedEmailer()
-    customer.send_message_to(messenger)
 ```
